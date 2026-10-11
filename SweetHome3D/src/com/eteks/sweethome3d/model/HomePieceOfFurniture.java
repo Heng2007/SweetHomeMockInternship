@@ -57,7 +57,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
    * The properties on which home furniture may be sorted.  
    */
   public enum SortableProperty {CATALOG_ID, NAME, WIDTH, DEPTH, HEIGHT, MOVABLE, 
-                                DOOR_OR_WINDOW, COLOR, TEXTURE, VISIBLE, X, Y, ELEVATION, ANGLE,
+                                DOOR_OR_WINDOW, COLOR, TEXTURE, VISIBLE, VOLUME, X, Y, ELEVATION, ANGLE,
                                 PRICE, VALUE_ADDED_TAX, VALUE_ADDED_TAX_PERCENTAGE, PRICE_VALUE_ADDED_TAX_INCLUDED, LEVEL};
   private static final Map<SortableProperty, Comparator<HomePieceOfFurniture>> SORTABLE_PROPERTY_COMPARATORS;
   private static final float [][] IDENTITY = new float [][] {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
@@ -148,6 +148,13 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
           return HomePieceOfFurniture.compare(piece1.visible, piece2.visible);
         }
       });
+    SORTABLE_PROPERTY_COMPARATORS.put(SortableProperty.VOLUME, new Comparator<HomePieceOfFurniture>() {
+      public int compare(HomePieceOfFurniture piece1, HomePieceOfFurniture piece2) {
+        float piece1Volume = piece1.width * piece1.depth * piece1.height;
+        float piece2Volume = piece2.width * piece2.depth * piece2.height;
+        return HomePieceOfFurniture.compare(piece1Volume, piece2Volume);
+      }
+    });
     SORTABLE_PROPERTY_COMPARATORS.put(SortableProperty.X, new Comparator<HomePieceOfFurniture>() {
         public int compare(HomePieceOfFurniture piece1, HomePieceOfFurniture piece2) {
           return HomePieceOfFurniture.compare(piece1.x, piece2.x);
@@ -377,6 +384,14 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
    * Sets the name of this piece of furniture. Once this piece is updated, 
    * listeners added to this piece will receive a change notification.
    */
+
+
+  public Float getVolume(){return this.width * this.depth * this.height;}
+
+  /**
+   *  Get the Volume which got caluclated by this.width * this.depth * this.height
+   */
+
   public void setName(String name) {
     if (name != this.name
         && (name == null || !name.equals(this.name))) {
@@ -1237,3 +1252,6 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
     return SORTABLE_PROPERTY_COMPARATORS.get(property);    
   }
 }
+
+
+
